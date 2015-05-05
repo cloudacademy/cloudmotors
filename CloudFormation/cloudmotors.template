@@ -8,7 +8,7 @@
             "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
         },
         "DBName": {
-            "Default": "MyDatabase",
+            "Default": "cloudmotors",
             "Description": "MySQL database name",
             "Type": "String",
             "MinLength": "1",
@@ -17,6 +17,7 @@
             "ConstraintDescription": "must begin with a letter and contain only alphanumeric characters."
         },
         "DBUser": {
+            "Default": "cloudmotors",
             "NoEcho": "true",
             "Description": "Username for MySQL database access",
             "Type": "String",
@@ -26,6 +27,7 @@
             "ConstraintDescription": "must begin with a letter and contain only alphanumeric characters."
         },
         "DBPassword": {
+            "Default": "cloudmotors",
             "NoEcho": "true",
             "Description": "Password for MySQL database access",
             "Type": "String",
@@ -160,6 +162,9 @@
                 "Arch": "HVM64"
             },
             "t2.medium": {
+                "Arch": "HVM64"
+            },
+            "m3.small": {
                 "Arch": "HVM64"
             },
             "m1.small": {
