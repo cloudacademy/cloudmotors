@@ -1,7 +1,7 @@
 db:
   image: mysql
   environment:
-    MYSQL_ROOT_PASSWORD: cloudmotors
+    MYSQL_ALLOW_EMPTY_PASSWORD: yes
     MYSQL_DATABASE: cloudmotors
     MYSQL_USER: cloudmotors
     MYSQL_PASSWORD: cloudmotors
