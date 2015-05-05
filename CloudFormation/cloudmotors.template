@@ -650,10 +650,8 @@
                                             "cd /home/ec2-user/cloudmotors\n",
                                             "bundle install\n",
                                             "# Configure the database connection\n",
-                                            "mv /tmp/database.yml config\n",
-                                            "bundle exec rake db:migrate\n",
-                                            "bundle exec rake db:test:prepare\n",
-                                            "bundle exec rspec spec/\n"
+                                            "mv -f /tmp/database.yml config\n",
+                                            "rake db:migrate"
                                         ]
                                     ]
                                 },
