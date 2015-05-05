@@ -1,5 +1,10 @@
 db:
   image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: cloudmotors
+    MYSQL_DATABASE: cloudmotors
+    MYSQL_USER: cloudmotors
+    MYSQL_PASSWORD: cloudmotors
   ports:
     - "3306"
 web:
