@@ -13,20 +13,20 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: root
-  password:
-  host: localhost
+  username: cloudmotors
+  password: cloudmotors
+  host: db
 
 development:
   <<: *default
-  database: cloudmotors_development
+  database: cloudmotors
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: cloudmotors_test
+  database: cloudmotors
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -49,6 +49,6 @@ test:
 #
 production:
   <<: *default
-  database: cloudmotors_production
+  database: cloudmotors
   username: cloudmotors
-  password: <%= ENV['CLOUDMOTORS_DATABASE_PASSWORD'] %>
+  password: cloudmotors
