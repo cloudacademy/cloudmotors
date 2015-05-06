@@ -651,7 +651,7 @@
                                             "# Typically you would use files and/or sources to download\n",
                                             "# your application package and perform any configuration here.\n",
                                             "# Create a new application, with therubyracer javascript library\n",
-                                            "git clone https://github.com/ericovis/cloudmotors.git\n",
+                                            "git clone https://github.com/cloudacademy/cloudmotors.git\n",
                                             "cd /home/ec2-user/cloudmotors\n",
                                             "bundle install\n",
                                             "# Configure the database connection\n",
