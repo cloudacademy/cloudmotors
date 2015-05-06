@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "This is a custom HA template for the Cloud Motors Lab at CloudAcademy.com",
+    "Description": "This is a custom template for the Cloud Motors Lab at CloudAcademy.com",
     "Parameters": {
         "KeyName": {
             "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
@@ -76,7 +76,7 @@
             "ConstraintDescription": "must select a valid database instance type."
         },
         "MultiAZDatabase": {
-            "Default": "true",
+            "Default": "false",
             "Description": "Create a ulti-AZ MySQL Amazon RDS database instance",
             "Type": "String",
             "AllowedValues": [
@@ -374,72 +374,9 @@
         }
     },
     "Resources": {
-        "ElasticLoadBalancer": {
-            "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-            "Properties": {
-                "AvailabilityZones": {
-                    "Fn::GetAZs": ""
-                },
-                "CrossZone": "true",
-                "LBCookieStickinessPolicy": [
-                    {
-                        "PolicyName": "CookieBasedPolicy",
-                        "CookieExpirationPeriod": "30"
-                    }
-                ],
-                "Listeners": [
-                    {
-                        "LoadBalancerPort": "80",
-                        "InstancePort": "80",
-                        "Protocol": "HTTP",
-                        "PolicyNames": [
-                            "CookieBasedPolicy"
-                        ]
-                    }
-                ],
-                "HealthCheck": {
-                    "Target": "HTTP:80/",
-                    "HealthyThreshold": "2",
-                    "UnhealthyThreshold": "5",
-                    "Interval": "10",
-                    "Timeout": "5"
-                }
-            }
-        },
-        "WebServerGroup": {
-            "Type": "AWS::AutoScaling::AutoScalingGroup",
-            "Properties": {
-                "AvailabilityZones": {
-                    "Fn::GetAZs": ""
-                },
-                "LaunchConfigurationName": {
-                    "Ref": "LaunchConfig"
-                },
-                "MinSize": "1",
-                "MaxSize": "5",
-                "DesiredCapacity": "1",
-                "LoadBalancerNames": [
-                    {
-                        "Ref": "ElasticLoadBalancer"
-                    }
-                ]
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Timeout": "PT30M"
-                }
-            },
-            "UpdatePolicy": {
-                "AutoScalingRollingUpdate": {
-                    "MinInstancesInService": "1",
-                    "MaxBatchSize": "1",
-                    "PauseTime": "PT30M",
-                    "WaitOnResourceSignals": "true"
-                }
-            }
-        },
-        "LaunchConfig": {
-            "Type": "AWS::AutoScaling::LaunchConfiguration",
+        "RailsServer": {
+            "Type": "AWS::EC2::Instance",
+            "DependsOn": "MySQLDatabase",
             "Metadata": {
                 "AWS::CloudFormation::Init": {
                     "configSets": {
@@ -482,13 +419,13 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.LaunchConfig.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.RailsServer.Metadata.AWS::CloudFormation::Init\n",
                                             "action=/opt/aws/bin/cfn-init -v ",
                                             "         --stack ",
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "         --resource LaunchConfig ",
+                                            "         --resource RailsServer ",
                                             "         --configsets full_install ",
                                             "         --region ",
                                             {
@@ -695,6 +632,25 @@
                             },
                             "04_cleanup": {
                                 "command": "rm /tmp/install_application"
+                            },
+                            "05_send_signal": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "/opt/aws/bin/cfn-signal -e 0 ",
+                                            "         --stack ",
+                                            {
+                                                "Ref": "AWS::StackId"
+                                            },
+                                            "         --resource RailsServer ",
+                                            "         --region ",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            }
+                                        ]
+                                    ]
+                                }
                             }
                         }
                     }
@@ -737,31 +693,25 @@
                                 "#!/bin/bash -xe\n",
                                 "yum update -y aws-cfn-bootstrap\n",
                                 "/opt/aws/bin/cfn-init -v ",
-                                "         --stack ",
+                                "--stack ",
                                 {
                                     "Ref": "AWS::StackId"
                                 },
-                                "         --resource LaunchConfig ",
-                                "         --configsets full_install ",
-                                "         --region ",
+                                " --resource RailsServer ",
+                                "--configsets full_install ",
+                                "--region ",
                                 {
                                     "Ref": "AWS::Region"
-                                },
-                                "\n",
-                                "/opt/aws/bin/cfn-signal -e $? ",
-                                "         --stack ",
-                                {
-                                    "Ref": "AWS::StackId"
-                                },
-                                "         --resource WebServerGroup ",
-                                "         --region ",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                "\n"
+                                }
                             ]
                         ]
                     }
+                }
+            },
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Timeout": "PT20M",
+                    "Count": "1"
                 }
             }
         },
@@ -774,18 +724,7 @@
                         "IpProtocol": "tcp",
                         "FromPort": "80",
                         "ToPort": "80",
-                        "SourceSecurityGroupOwnerId": {
-                            "Fn::GetAtt": [
-                                "ElasticLoadBalancer",
-                                "SourceSecurityGroup.OwnerAlias"
-                            ]
-                        },
-                        "SourceSecurityGroupName": {
-                            "Fn::GetAtt": [
-                                "ElasticLoadBalancer",
-                                "SourceSecurityGroup.GroupName"
-                            ]
-                        }
+                        "CidrIp": "0.0.0.0/0"
                     },
                     {
                         "IpProtocol": "tcp",
@@ -890,11 +829,10 @@
                         "http://",
                         {
                             "Fn::GetAtt": [
-                                "ElasticLoadBalancer",
-                                "DNSName"
+                                "RailsServer",
+                                "PublicDnsName"
                             ]
-                        },
-                        ""
+                        }
                     ]
                 ]
             },
