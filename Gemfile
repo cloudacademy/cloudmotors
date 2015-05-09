@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'simple_form'
 gem 'twitter-bootstrap-rails'
-
+gem 'random_data'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 # Use mysql as the database for Active Record

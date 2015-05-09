@@ -5,3 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+#
+
+require 'random_data'    
+models = ["Camo Suburban","Daredevil","Mindblower","Outlander"]
+[1..1024].each do
+	Order.create!(name: "#{Random.firstname} #{Random.lastname}", email: Random.email, model: models.sample, details: Random.paragraphs)
+end
