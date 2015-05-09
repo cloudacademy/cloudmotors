@@ -10,5 +10,4 @@ require 'faker'
 models = ["Camo Suburban","Daredevil","Mindblower","Outlander"]
 (1..120).each do
 	        Order.create!(name: Faker::Name.name, email: Faker::Internet.email, model: models.sample, details: Faker::Lorem.sentence)
-		        sleep(1)
 end
