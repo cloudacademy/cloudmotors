@@ -1,4 +1,4 @@
-FROM ruby:2.0.0
+FROM ruby
 RUN apt-get update -qq && apt-get install -y git libmysqlclient-dev  build-essential libpq-dev
 RUN mkdir /cloudmotors
 WORKDIR /cloudmotors
