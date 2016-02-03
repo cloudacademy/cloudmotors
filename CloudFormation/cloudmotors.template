@@ -466,13 +466,12 @@
                                 "git": [],
                                 "gcc-c++": [],
                                 "make": [],
-                                "ruby-devel": ["2.1.3"],
+                                "ruby-devel": [],
                                 "rubygems": [],
                                 "rubygem-io-console": [],
                                 "patch": []
                             },
                             "rubygems" : {
-                              "rake" : [],
                                "bundler": []
                             }
                         },
@@ -486,11 +485,6 @@
                         }
                     },
                     "install_application": {
-                        "packages": {
-                            "rubygems": {
-                                "rails": ["4.2.0"]
-                            }
-                        },
                         "files": {
                             "/tmp/database.yml": {
                                 "content": {
@@ -714,7 +708,7 @@
             },
             "CreationPolicy": {
                 "ResourceSignal": {
-                    "Timeout": "PT20M",
+                    "Timeout": "PT30M",
                     "Count": "1"
                 }
             }

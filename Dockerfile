@@ -3,7 +3,5 @@ RUN apt-get update -qq && apt-get install -y git libmysqlclient-dev  build-essen
 RUN mkdir /cloudmotors
 WORKDIR /cloudmotors
 ADD Gemfile /cloudmotors/Gemfile
-RUN gem install bundler
-RUN gem install rake -v 10.4.2
 RUN bundle install
 ADD . /cloudmotors
