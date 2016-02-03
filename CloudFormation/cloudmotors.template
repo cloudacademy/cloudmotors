@@ -466,10 +466,14 @@
                                 "git": [],
                                 "gcc-c++": [],
                                 "make": [],
-                                "ruby-devel": [],
+                                "ruby-devel": ["2.1.3"],
                                 "rubygems": [],
                                 "rubygem-io-console": [],
                                 "patch": []
+                            },
+                            "rubygems" : {
+                              "rake" : [],
+                               "bundler": []
                             }
                         },
                         "commands": {
@@ -477,14 +481,14 @@
                                 "command": "gem update --system"
                             },
                             "02_reload_nokogiri": {
-                                "command": "gem install --no-ri --no-rdoc nokogiri"
+                                "command": "gem install nokogiri"
                             }
                         }
                     },
                     "install_application": {
                         "packages": {
                             "rubygems": {
-                                "rails": []
+                                "rails": ["4.2.0"]
                             }
                         },
                         "files": {

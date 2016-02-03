@@ -1,7 +1,7 @@
 Cloud Motors Lab
 ===========
 
-This is a sample rails app for the SysOps prep course at CloudAcademy.com
+This is a sample rails app for the [AWS SysOps Administrator Associate Level Certification](https://cloudacademy.com/learning-paths/aws-sysops/) prep course at [Cloud Academy](http://cloudacademy.com)
 ----------
 
 ###Geting Started
